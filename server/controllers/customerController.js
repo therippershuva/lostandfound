@@ -67,6 +67,19 @@ exports.about = async (req, res) => {
     }
 }
 
+exports.signinout = async (req, res) => {
+    const locals = {
+      title: 'signinout',
+      description: 'Free NodeJs User Management System'
+    }
+
+    try {
+      res.render('signinout', locals );
+    } catch (error) {
+      console.log(error);
+    }
+}
+
 
 
 
