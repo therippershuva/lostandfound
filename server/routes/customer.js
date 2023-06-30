@@ -16,6 +16,8 @@ router.delete('/edit/:id', customerController.deleteCustomer);
 
 router.post('/search', customerController.searchCustomers);
 router.get('/signinout', customerController.signinout);
+router.get('/home', customerController.home);
+router.get('/lostandfound', customerController.lostandfound);
 
 
 

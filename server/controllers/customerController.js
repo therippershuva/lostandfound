@@ -79,7 +79,55 @@ exports.signinout = async (req, res) => {
       console.log(error);
     }
 }
+exports.about = async (req, res) => {
+    const locals = {
+      title: 'About',
+      description: 'Free NodeJs User Management System'
+    }
 
+    try {
+      res.render('about', locals );
+    } catch (error) {
+      console.log(error);
+    }
+}
+
+exports.signinout = async (req, res) => {
+    const locals = {
+      title: 'signinout',
+      description: 'Free NodeJs User Management System'
+    }
+
+    try {
+      res.render('signinout', locals );
+    } catch (error) {
+      console.log(error);
+    }
+}
+exports.home = async (req, res) => {
+  const locals = {
+    title: 'home',
+    description: 'Free NodeJs User Management System'
+  }
+
+  try {
+    res.render('home', locals );
+  } catch (error) {
+    console.log(error);
+  }
+}
+exports.lostandfound = async (req, res) => {
+  const locals = {
+    title: 'lostandfound',
+    description: 'Free NodeJs User Management System'
+  }
+
+  try {
+    res.render('lostandfound', locals) ;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 

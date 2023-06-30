@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" type="text/css" href="css/home.css" />
+        <link
+            href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navbar-container container">
+                <input type="checkbox" name="" id="" />
+                <div class="hamburger-lines">
+                    <span class="line line1"></span>
+                    <span class="line line2"></span>
+                    <span class="line line3"></span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="index.html" class="button ghost">Home</a></li>
+                    <li><a href="#" class="button ghost">About</a></li>
+                    <li><a href="lostAndFound.html" class="button outline">Report/Find</a></li>
+                    <li><a href="signInOut.html" class="button secondary">Sign In</a></li>
+                </ul>
+                <h1 class="logo"><a href="index.html" class="unbounded">Lost & Found</a></h1>
+            </div>
+        </nav>
+        <div class="login-wrap">
+            <div
+                class="login-html"
+                style="
+                    background: linear-gradient(
+                        to right,
+                        rgba(40, 57, 101, 0.9),
+                        rgba(62, 47, 120, 0.9)
+                    );
+                "
+            >
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked /><label
+                    for="tab-1"
+                    class="tab"
+                    >Find Item</label
+                >
+                <input id="tab-2" type="radio" name="tab" class="sign-up" /><label
+                    for="tab-2"
+                    class="tab"
+                    >Report Item</label
+                >
+                <div class="login-form">
+                    <form action="/item/add" method="post" class="sign-in-htm">
+                        <div class="group">
+                            <label for="user" class="label">Item Description</label>
+                            <input id="user" name="description" type="text" class="input" />
+                        </div>
+                        <div class="group">
+                            <label for="lastLocation" class="label">Last Location</label>
+                            <input id="lastLocation" name="lastLocation"  type="text" class="input"  />
+                        </div>
+                        <div class="group" style="margin-bottom: 5rem">
+                            <label for="image" class="label">Images</label>
+                            <!-- <input id="image" type="file" /> -->
+                            <div class="file-input">
+                                <input type="file" id="file" class="file" />
+                                <label for="file">
+                                    Select file
+                                    <p class="file-name"></p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Submit" />
+                        </div>
+                    </form>
+                    <div class="sign-up-htm">
+                        <div class="group">
+                            <label for="user" class="label">Item Description</label>
+                            <input id="user" type="text" class="input" />
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Found Location</label>
+                            <input id="pass" type="password" class="input" data-type="password" />
+                        </div>
+                        <div class="group" style="margin-bottom: 5rem">
+                            <label for="image" class="label">Images</label>
+                            <!-- <input id="image" type="file" /> -->
+                            <div class="file-input">
+                                <input type="file" id="file" class="file" />
+                                <label for="file">
+                                    Select file
+                                    <p class="file-name"></p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer__addr">
+                        <h1 class="footer__logo">Something</h1>
+
+                        <h2>Contact</h2>
+
+                        <address>
+                            5534 Somewhere In. The World 22193-10212<br />
+
+                            <a class="footer__btn" href="mailto:example@gmail.com">Email Us</a>
+                        </address>
+                    </div>
+
+                    <ul class="footer__nav">
+                        <li class="nav__item">
+                            <h2 class="nav__title">Media</h2>
+
+                            <ul class="nav__ul">
+                                <li>
+                                    <a href="#">Online</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Print</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Alternative Ads</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav__item nav__item--extra">
+                            <h2 class="nav__title">Technology</h2>
+
+                            <ul class="nav__ul nav__ul--extra">
+                                <li>
+                                    <a href="#">Hardware Design</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Software Design</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Digital Signage</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Automation</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Artificial Intelligence</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">IoT</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav__item">
+                            <h2 class="nav__title">Legal</h2>
+
+                            <ul class="nav__ul">
+                                <li>
+                                    <a href="#">Privacy Policy</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Terms of Use</a>
+                                </li>
+
+                                <li>
+                                    <a href="#">Sitemap</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="legal">
+                    <p>&copy; 2023 Something. All rights reserved.</p>
+
+                    <div class="legal__links">
+                        <span>Made with <span class="heart">♥</span> remotely from Anywhere</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+    <script>
+        const file = document.querySelector("#file");
+        file.addEventListener("change", (e) => {
+            // Get the selected file
+            const [file] = e.target.files;
+            // Get the file name and size
+            const { name: fileName, size } = file;
+            // Convert size in bytes to kilo bytes
+            const fileSize = (size / 1000).toFixed(2);
+            // Set the text content
+            const fileNameAndSize = `${fileName} - ${fileSize}KB`;
+            document.querySelector(".file-name").textContent = fileNameAndSize;
+        });
+    </script>
+</html>
