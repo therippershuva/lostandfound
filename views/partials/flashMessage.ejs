@@ -1,0 +1,27 @@
+<% if(authMessages && authMessages.length > 0) { %>
+<section class="">
+    <% authMessages.forEach(element => { %>
+    <div
+        id="authMessage"
+        class="alert alert-success alert-dismissible fade show mt-3"
+        role="alert"
+    >
+        <%= element %>
+        <button
+            type="button"
+            class="btn-close"
+            data-dismiss="alert"
+            aria-label="Close"
+            onclick="handleDismiss()"
+        ></button>
+    </div>
+    <% }) %>
+</section>
+<% } %>
+
+<script>
+    function handleDismiss() {
+        const authMessage = document.getElementById("authMessage");
+        authMessage.style.display = "none";
+    }
+</script>

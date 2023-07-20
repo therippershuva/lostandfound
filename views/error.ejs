@@ -1,0 +1,12 @@
+<div class="row justify-content-center align-content-center min-vh-80">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">An error occoured!</h3>
+                <% if (error.message) { %>
+                <p class="card-text"><%= error.message %></p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

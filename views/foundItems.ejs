@@ -1,0 +1,78 @@
+<div class="container-sm">
+    <%- include('partials/flashMessage.ejs') %>
+
+    <section id="found-items" name="lost-items" class="min-vh-80">
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+        >
+            <h1 class="h2">Found Items</h1>
+        </div>
+
+        <div class="row justify-content-start gap-3">
+            <% foundItems.forEach(element => { %>
+            <div class="col-md-3">
+                <div class="card">
+                    <img
+                        class="card-img-top"
+                        src="https://loremflickr.com/320/240"
+                        alt="Title"
+                        style="background-position: center"
+                    />
+                    <div class="card-body">
+                        <h4 class="card-title"><%= element.description %></h4>
+                        <p class="card-text"><%= element.lastLocation %></p>
+                    </div>
+                </div>
+            </div>
+
+            <% }) %>
+        </div>
+
+        <% if (foundItems.length > 0) { %>
+        <nav aria-label="Dashboard Pagination">
+            <ul class="pagination justify-content-center mt-5">
+                <% if (foundCurrent == 1) { %>
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">First</a>
+                </li>
+                <% } else { %>
+                <li class="page-item">
+                    <a href="/?foundPage=1" class="page-link">First</a>
+                </li>
+                <% } %> <% var i = (Number(foundCurrent) > 5 ?
+                Number(foundCurrent) - 4 : 1) %> <% if(i !== 1) { %>
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">...</a>
+                </li>
+                <% } %> <% for(; i <= (Number(foundCurrent) + 4) && i <=
+                foundPages; i++ ) { %> <% if (i == foundCurrent) { %>
+                <li class="page-item disabled">
+                    <a href="#" class="page-link"><%= i %></a>
+                </li>
+                <% } else { %>
+                <li class="page-item">
+                    <a href="/?foundPage=<%= i %>" class="page-link"
+                        ><%= i %></a
+                    >
+                </li>
+                <% } %> <% if (i == Number(foundCurrent) + 4 && i < foundPages)
+                { %>
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">...</a>
+                </li>
+                <% } %> <% } %> <% if (foundCurrent == foundPages) { %>
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">Last</a>
+                </li>
+                <% } else { %>
+                <li class="page-item">
+                    <a href="/?foundPage=<%= foundPages %>" class="page-link"
+                        >Last</a
+                    >
+                </li>
+                <% } %>
+            </ul>
+        </nav>
+        <% } %>
+    </section>
+</div>

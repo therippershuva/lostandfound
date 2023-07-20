@@ -1,50 +1,126 @@
-const Customer = require("../models/Customer");
-const Item = require("../models/Item");
+const { LostItem, FoundItem } = require("../models/Item");
 
-exports.postItem = async (req, res) => {
-    console.log(req.body);
-
-    const newItem = new Item({
-        description: req.body.description,
-        lastLocation: req.body.lastLocation,
-        images: "this is image",
-    });
-
+exports.postLostItem = async (req, res) => {
     try {
-        await Item.create(newItem);
+        let images = [];
+        if (req.files) {
+            for (item in req.files) images.push(item.path);
+        }
+
+        const newItem = new LostItem({
+            description: req.body.description,
+            lastLocation: req.body.lastLocation,
+            images: images,
+            name: req.body.name,
+            category: req.body.category,
+            lastSeenDate: req.body.lastSeenDate,
+        });
+
+        await LostItem.create(newItem);
         await req.flash("info", "New item has been added.");
 
-        res.redirect("/item");
+        res.redirect("/item/lost");
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };
 
-exports.homepage = async (req, res) => {
+exports.postFoundItem = async (req, res) => {
+    console.log(req.body);
+    console.log(req.files);
+
+    let images = [];
+    if (req.files) {
+        for (item in req.files) images.push(item.path);
+    }
+
+    const newItem = new FoundItem({
+        description: req.body.description,
+        foundLocation: req.body.foundLocation,
+        images: images,
+        name: req.body.name,
+        category: req.body.category,
+        foundDate: req.body.foundDate,
+    });
+
+    try {
+        await FoundItem.create(newItem);
+        await req.flash("info", "New item has been added.");
+
+        res.redirect("/item/lost");
+    } catch (error) {
+        console.log(error);
+        res.status(500).render("error", { error });
+    }
+};
+
+exports.lostItems = async (req, res) => {
     const messages = await req.consumeFlash("info");
+    const authMessages = await req.consumeFlash("auth");
     const locals = {
-        title: "NodeJs",
-        description: "Free NodeJs User Management System",
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
     };
 
     let perPage = 12;
-    let page = req.query.page || 1;
+    let lostPage = req.query.lostPage || 1;
 
     try {
-        const items = await Item.aggregate([{ $sort: { createdAt: -1 } }])
-            .skip(perPage * page - perPage)
+        const lostItems = await LostItem.aggregate([
+            { $sort: { createdAt: -1 } },
+        ])
+            .skip(perPage * lostPage - perPage)
             .limit(perPage)
             .exec();
-        const count = await Item.count();
+        const lostCount = await LostItem.count();
 
-        res.render("inventory", {
+        res.render("lostItems", {
             locals,
-            items,
-            current: page,
-            pages: Math.ceil(count / perPage),
+            lostItems,
+            lostCurrent: lostPage,
+            lostPages: Math.ceil(lostCount / perPage),
             messages,
+            authMessages,
         });
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
+    }
+};
+
+exports.foundItems = async (req, res) => {
+    const messages = await req.consumeFlash("info");
+    const authMessages = await req.consumeFlash("auth");
+    const locals = {
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
+    };
+
+    let perPage = 12;
+    let foundPage = req.query.foundPage || 1;
+
+    try {
+        const foundItems = await FoundItem.aggregate([
+            { $sort: { createdAt: -1 } },
+        ])
+            .skip(perPage * foundPage - perPage)
+            .limit(perPage)
+            .exec();
+        const foundCount = await FoundItem.count();
+
+        res.render("foundItems", {
+            locals,
+            foundItems,
+            foundCurrent: foundPage,
+            foundPages: Math.ceil(foundCount / perPage),
+            messages,
+            authMessages,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).render("error", { error });
     }
 };

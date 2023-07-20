@@ -1,20 +1,67 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
-const ItemSchema = new Schema({
-  description: {
-    type: String,
-    required: true
-  },
-  lastLocation: {
-    type: String,
-    required: true
-  },
-  images: {
-    type: String,
-    required: true
-  },
- 
-}, {timestamps:true});
+const foundItemSchema = mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
 
-module.exports = mongoose.model('Item', ItemSchema);
+        foundDate: {
+            type: Date,
+            required: true,
+        },
+        foundLocation: {
+            type: String,
+            required: true,
+        },
+        image: {
+            type: Array,
+            required: true,
+        },
+        category: {
+            type: String,
+            required: true,
+            default: "Other",
+        },
+    },
+    { timestamps: true }
+);
+
+const lostItemSchema = mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        lastSeenDate: {
+            type: Date,
+            required: true,
+        },
+        lastLocation: {
+            type: String,
+            required: true,
+        },
+        images: {
+            type: Array,
+            required: true,
+        },
+        category: {
+            type: String,
+            required: true,
+            default: "Other",
+        },
+    },
+    { timestamps: true }
+);
+
+module.exports.FoundItem = mongoose.model("FoundItem", foundItemSchema);
+module.exports.LostItem = mongoose.model("LostItem", lostItemSchema);

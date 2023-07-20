@@ -6,7 +6,10 @@ const methodOverride = require("method-override");
 const { flash } = require("express-flash-message");
 const session = require("express-session");
 const connectDB = require("./server/config/db");
-const bodyParser = require("body-parser");
+const { checkSessionToken } = require("./server/middlewares/verification");
+
+// const bodyParser = require("body-parser");
+// const cookieParser = require("cookie-parser");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,11 +27,11 @@ app.use(express.static("public"));
 // Express Session
 app.use(
     session({
-        secret: "secret",
+        secret: process.env.SECRET_KEY,
         resave: false,
         saveUninitialized: true,
         cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+            maxAge: 1000 * 60 * 60 * 24, // day
         },
     })
 );
@@ -48,8 +51,12 @@ app.use("/customer", require("./server/routes/customer"));
 app.use("/auth", require("./server/routes/authRoutes"));
 
 // Handle 404
-app.get("*", (req, res) => {
-    res.status(404).render("404");
+app.get("*", checkSessionToken, (req, res) => {
+    const locals = {
+        loggedIn: req.session.loggedIn,
+        session: req.session,
+    };
+    res.status(404).render("404", locals);
 });
 
 app.listen(port, () => {

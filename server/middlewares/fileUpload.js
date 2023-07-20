@@ -2,8 +2,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const app = express();
-
 // Set up the storage for uploaded files
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -49,17 +47,15 @@ const fileFilter = function fileFilter(req, file, cb) {
         const ext = path.extname(file.originalname);
         if (ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".gif") {
             throw {
-                error: {
-                    status: 400,
-                    type: "mimetype error",
-                    message: "Only images are allowed",
-                },
+                status: 400,
+                type: "mimetype error",
+                message: "Only images are allowed",
             };
         }
         // return no error if image
         return cb(null, true);
-    } catch (err) {
-        if (process.env.NODE_ENV === "dev") console.log(err);
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.log(error);
         return cb(null, false);
     }
 };
@@ -75,7 +71,4 @@ module.exports.imagesUpload = multer({
         fileSize: 1024 * 1024 * 5,
     },
     fileFilter: fileFilter,
-}).fields([
-    { name: "avatar", maxCount: 1 },
-    { name: "cover", maxCount: 1 },
-]);
+}).fields([{ name: "images", maxCount: 4 }]);

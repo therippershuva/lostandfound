@@ -1,5 +1,6 @@
+const { flash } = require("express-flash-message");
 const Customer = require("../models/Customer");
-const mongoose = require("mongoose");
+const { errorMessage } = require("../utils/errorMessages");
 
 /**
  * GET /
@@ -8,15 +9,19 @@ const mongoose = require("mongoose");
 exports.admin = async (req, res) => {
     const messages = await req.consumeFlash("info");
     const locals = {
-        title: "NodeJs",
-        description: "Free NodeJs User Management System",
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
+        session: req.session,
     };
 
     let perPage = 12;
     let page = req.query.page || 1;
 
     try {
-        const customers = await Customer.aggregate([{ $sort: { createdAt: -1 } }])
+        const customers = await Customer.aggregate([
+            { $sort: { createdAt: -1 } },
+        ])
             .skip(perPage * page - perPage)
             .limit(perPage)
             .exec();
@@ -31,6 +36,7 @@ exports.admin = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };
 
@@ -40,52 +46,64 @@ exports.admin = async (req, res) => {
  */
 exports.about = async (req, res) => {
     const locals = {
-        title: "About",
-        description: "Free NodeJs User Management System",
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
+        session: req.session,
     };
 
     try {
         res.render("about", locals);
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };
 
-exports.signinout = async (req, res) => {
-    const locals = {
-        title: "signinout",
-        description: "Free NodeJs User Management System",
-    };
-
+exports.signUpIn = async (req, res) => {
     try {
-        res.render("signinout", locals);
+        const locals = {
+            title: "Lost and Found",
+            description: "Lost and Found Management System",
+            loggedIn: req.session.loggedIn,
+            session: req.session,
+        };
+
+        res.render("signUpIn", locals);
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };
 
 exports.home = async (req, res) => {
     const locals = {
-        title: "home",
-        description: "Free NodeJs User Management System",
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
+        session: req.session,
     };
 
     try {
-        res.render("home", locals);
+        res.render("landing", locals);
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };
 
-exports.lostandfound = async (req, res) => {
+exports.lostAndFound = async (req, res) => {
     const locals = {
-        title: "lostandfound",
-        description: "Free NodeJs User Management System",
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        loggedIn: req.session.loggedIn,
+        session: req.session,
     };
 
     try {
-        res.render("lostandfound", locals);
+        res.render("lostAndFound", locals);
     } catch (error) {
         console.log(error);
+        res.status(500).render("error", { error });
     }
 };

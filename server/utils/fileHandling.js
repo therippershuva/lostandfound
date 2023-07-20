@@ -14,9 +14,9 @@ const deleteFiles = async function (filesToDelete) {
         }
 
         return `Successfully Deleted:\n\t${filesToDelete}\n`;
-    } catch (err) {
-        if (process.env.NODE_ENV === "dev") console.log(err);
-        return { error: err };
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.log(error);
+        return { error: error };
     }
 };
 

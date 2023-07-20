@@ -79,18 +79,15 @@ module.exports.register_get = (req, res) => {
 };
 
 /** Controls REGISTER POST requests.
- *
  * POST body: { username: , email: , password: }
- */
+ * */
 module.exports.register_post = async (req, res) => {
     try {
         // First validate req.body data
         const { error } = registerValidation(req.body);
         if (error)
             throw {
-                error: {
-                    message: error.details[0].message,
-                },
+                message: error.details[0].message,
             };
 
         // Check unique email
@@ -102,7 +99,9 @@ module.exports.register_post = async (req, res) => {
             };
 
         // check unique username
-        const usernameFound = await User.findOne({ username: req.body.username });
+        const usernameFound = await User.findOne({
+            username: req.body.username,
+        });
         if (usernameFound)
             throw {
                 type: "already exists",
@@ -149,10 +148,16 @@ module.exports.register_post = async (req, res) => {
         //         // token: savedToken,
         //     },
         // });
-        res.render("auth/registered", { user: user });
+
+        await req.flash(
+            "auth",
+            "Successfully registered! Please check your email to verify your account."
+        );
+
+        res.render("auth/registered");
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ error });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -182,61 +187,79 @@ module.exports.login_post = async (req, res) => {
         const { error } = loginValidation(req.body);
         if (error)
             throw {
-                error: {
-                    message: error.details[0].message,
-                },
+                message: error.details[0].message,
             };
 
         //check email exists
         const userFound = await User.findOne({ email: req.body.email });
         if (!userFound)
             throw {
-                error: {
-                    type: "Non-existence",
-                    message: "Email not found!",
-                    location: "email",
-                },
+                type: "Non-existence",
+                message: "Email not found!",
+                location: "email",
             };
 
         // check email verified
         if (!userFound.isEmailVerified)
             throw {
-                error: {
-                    type: "Access denied",
-                    message: "Email is not verified!",
-                    location: "email",
-                },
+                type: "Access denied",
+                message: "Email is not verified!",
+                location: "email",
             };
 
         // Check password
-        const validPass = await bcrypt.compare(req.body.password, userFound.password);
+        const validPass = await bcrypt.compare(
+            req.body.password,
+            userFound.password
+        );
         if (!validPass)
             throw {
-                error: {
-                    type: "Authentication failure",
-                    message: "Wrong Password.",
-                    location: "password",
-                },
+                type: "Authentication failure",
+                message: "Wrong Password.",
+                location: "password",
             };
 
         delete userFound.password;
 
         // assign web token
-        const token = jwt.sign({ _id: userFound._id }, process.env.TOKEN_SECRET);
-        res.header(`auth-token`, token)
-            .status(202)
-            .send({
-                success: {
-                    status: 202,
-                    type: "Successful Request",
-                    message: "Login Successful",
-                    auth_token: token,
-                    user: userFound,
-                },
-            });
+        const token = jwt.sign(
+            { _id: userFound._id, role: userFound.role },
+            process.env.SECRET_KEY
+        );
+
+        req.session.user = userFound;
+        req.session.token = token;
+
+        const locals = {
+            user: userFound,
+            token: token,
+            loggedIn: true,
+        };
+
+        let authMessages = await req.flash("auth", "Successfully logged in!");
+
+        res.redirect("/item/lost", authMessages, locals);
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
+    }
+};
+
+module.exports.logout_get = async (req, res) => {
+    try {
+        const locals = {
+            loggedIn: false,
+        };
+
+        req.session.loggedIn = false;
+        req.session.token = null;
+
+        let authMessages = req.flash("auth", "Successfully logged out!");
+
+        return res.redirect("/item/lost", authMessages, locals);
+    } catch (error) {
+        console.error(error);
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -252,7 +275,8 @@ module.exports.email_confirmation_handler_get = async (req, res) => {
         if (!tokenFound)
             throw {
                 type: "Non-existence",
-                message: "Unable to find a valid token or Token already expired",
+                message:
+                    "Unable to find a valid token or Token already expired",
             };
 
         // check if the user exists
@@ -273,21 +297,24 @@ module.exports.email_confirmation_handler_get = async (req, res) => {
             };
 
         // Verify the user
-        await User.updateOne({ _id: userToVerifyEmail._id }, { $set: { isEmailVerified: true } });
+        await User.updateOne(
+            { _id: userToVerifyEmail._id },
+            { $set: { isEmailVerified: true } }
+        );
 
         const mailResponse = await emailVerifiedEmailSender(userToVerifyEmail);
         if (mailResponse) throw mailResponse;
 
-        return res.status(200).send({
-            success: {
-                status: 200,
-                type: "Successful Request!",
-                message: `Email ${userToVerifyEmail.email} verified! Now, You can login.`,
-            },
-        });
+        successMessage = {
+            status: 200,
+            type: "Successful Request!",
+            message: `Email ${userToVerifyEmail.email} verified! Now, You can login.`,
+        };
+
+        return res.render("auth/verified", successMessage);
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -374,7 +401,11 @@ module.exports.reset_password_email_post = async (req, res) => {
         });
         const newToken = await token.save();
         // send email
-        const mailResponse = await resetPasswordEmailSender(req, userFound, newToken);
+        const mailResponse = await resetPasswordEmailSender(
+            req,
+            userFound,
+            newToken
+        );
         if (mailResponse) throw mailResponse;
 
         // after everything done successfully
@@ -387,7 +418,7 @@ module.exports.reset_password_email_post = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -422,7 +453,7 @@ module.exports.reset_password_get = async (req, res) => {
         // token display the form, if not display error
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -433,7 +464,9 @@ module.exports.reset_password_get = async (req, res) => {
 module.exports.reset_password_handler_patch = async (req, res) => {
     // return res.send("in progress");
     try {
-        const userToResetPasswordOf = await User.findOne({ email: req.body.email });
+        const userToResetPasswordOf = await User.findOne({
+            email: req.body.email,
+        });
         if (!userToResetPasswordOf) throw nonExistenceError("user");
 
         const tokenFound = await Token.findOne({ token: req.body.token });
@@ -493,11 +526,15 @@ module.exports.delete_account_email_post = async (req, res) => {
                 message: `Email: '${req.body.email}' is not associated with any accounts.`,
             };
 
-        const validPass = await bcrypt.compare(req.body.password, userFound.password);
+        const validPass = await bcrypt.compare(
+            req.body.password,
+            userFound.password
+        );
 
         if (!validPass)
             throw {
-                error: { type: "Authentication failure", message: "Wrong Password." },
+                type: "Authentication failure",
+                message: "Wrong Password.",
             };
 
         const tokenKey =
@@ -510,7 +547,11 @@ module.exports.delete_account_email_post = async (req, res) => {
             usage: "Account Deletion",
         }).save();
 
-        const mailResponse = await deleteAccountEmailSender(req, userFound, newToken);
+        const mailResponse = await deleteAccountEmailSender(
+            req,
+            userFound,
+            newToken
+        );
         if (mailResponse) throw mailResponse;
 
         return res.status(200).send({
@@ -522,7 +563,7 @@ module.exports.delete_account_email_post = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -536,20 +577,17 @@ module.exports.delete_account_get = async (req, res) => {
         const tokenFound = await Token.findOne({ token: urlToken });
         if (!tokenFound) {
             throw {
-                error: {
-                    type: "Non-existence",
-                    message: "Unable to find a valid token or Token already expired",
-                },
+                type: "Non-existence",
+                message:
+                    "Unable to find a valid token or Token already expired",
             };
         }
 
         const userFound = await User.findOne({ _id: tokenFound._userId });
         if (!userFound) {
             throw {
-                error: {
-                    type: "Non-existence",
-                    message: "Unable to find a user associated with token",
-                },
+                type: "Non-existence",
+                message: "Unable to find a user associated with token",
             };
         }
 
@@ -565,7 +603,7 @@ module.exports.delete_account_get = async (req, res) => {
         // token display the form, if not display error
     } catch (error) {
         console.error(error);
-        return res.status(400).send({ ...error, status: "error" });
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -579,28 +617,29 @@ module.exports.delete_account_handler_delete = async (req, res) => {
         const tokenFound = await Token.findOne({ token: req.body.token });
         if (!tokenFound) {
             throw {
-                error: {
-                    status_code: 404,
-                    type: "Non-existence",
-                    message: "Unable to find a valid token or Token already expired",
-                },
+                status_code: 404,
+                type: "Non-existence",
+                message:
+                    "Unable to find a valid token or Token already expired",
             };
         }
 
         const userToDelete = await User.findOne({ email: req.body.email });
         if (!userToDelete) {
             throw {
-                error: {
-                    type: "Non-existence",
-                    message: "Unable to find a user associated with token",
-                },
+                type: "Non-existence",
+                message: "Unable to find a user associated with token",
             };
         }
 
-        const validPass = await bcrypt.compare(req.body.password, userToDelete.password);
+        const validPass = await bcrypt.compare(
+            req.body.password,
+            userToDelete.password
+        );
         if (!validPass)
             throw {
-                error: { type: "Authentication failure", message: "Wrong Password." },
+                type: "Authentication failure",
+                message: "Wrong Password.",
             };
 
         await User.deleteOne({ _id: userToDelete._id });

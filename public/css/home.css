@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@600&display=swap");
 
 :root {
     --main-color: #000;
@@ -13,6 +13,9 @@ body {
     color: #6a6f8c;
     background: #f1f1f1;
     font: 600 16px/18px;
+    font-family: "Outfit", sans-serif;
+}
+.outfit {
     font-family: "Outfit", sans-serif;
 }
 
@@ -240,7 +243,8 @@ a {
     padding: 50px 70px 50px 70px;
     border-radius: 1rem;
     background: rgba(40, 57, 101, 0.9);
-    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24),
+        0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
 .login-html .sign-in-htm,
@@ -277,13 +281,11 @@ a {
     border-bottom: 2px solid transparent;
 }
 
-.login-html .sign-in:checked+.tab,
-.login-html .sign-up:checked+.tab {
+.login-html .sign-in:checked + .tab,
+.login-html .sign-up:checked + .tab {
     color: #fff;
     border-color: #1161ee;
 }
-
-
 
 .login-form {
     min-height: 345px;
@@ -357,27 +359,33 @@ a {
     transform: scale(0) rotate(0);
 }
 
-.login-form .group .check:checked+label {
+.login-form .group .check:checked + label {
     color: #fff;
 }
 
-.login-form .group .check:checked+label .icon {
+.login-form .group .check:checked + label .icon {
     background: #1161ee;
 }
 
-.login-form .group .check:checked+label .icon:before {
+.login-form .group .check:checked + label .icon:before {
     transform: scale(1) rotate(45deg);
 }
 
-.login-form .group .check:checked+label .icon:after {
+.login-form .group .check:checked + label .icon:after {
     transform: scale(1) rotate(-45deg);
 }
 
-.login-html .sign-in:checked+.tab+.sign-up+.tab+.login-form .sign-in-htm {
+.login-html
+    .sign-in:checked
+    + .tab
+    + .sign-up
+    + .tab
+    + .login-form
+    .sign-in-htm {
     transform: rotate(0);
 }
 
-.login-html .sign-up:checked+.tab+.login-form .sign-up-htm {
+.login-html .sign-up:checked + .tab + .login-form .sign-up-htm {
     transform: rotate(0);
 }
 
@@ -390,7 +398,6 @@ a {
 .foot-lnk {
     text-align: center;
 }
-
 
 .button {
     width: fit-content;
@@ -461,7 +468,6 @@ a {
     color: #fff;
 }
 
-
 /* footer */
 
 /* Footer */
@@ -477,12 +483,11 @@ a {
     flex-flow: row wrap;
     padding: 30px 30px 20px 30px;
     color: #2f2f2f;
-    background-color: #fff;
     border-top: 1px solid #e5e5e5;
     width: 100%;
 }
 
-.footer>* {
+.footer > * {
     flex: 1 100%;
 }
 
@@ -492,7 +497,7 @@ a {
 }
 
 .footer__logo {
-    font-family: 'Pacifico', cursive;
+    font-family: "Pacifico", cursive;
     font-weight: 400;
     text-transform: lowercase;
     font-size: 1.5rem;
@@ -511,7 +516,7 @@ a {
 
 .footer address {
     font-style: normal;
-    color: #999;
+    color: #ffffff97;
 }
 
 .footer__btn {
@@ -547,13 +552,13 @@ a {
     flex-flow: row wrap;
 }
 
-.footer__nav>* {
+.footer__nav > * {
     flex: 1 50%;
     margin-right: 1.25em;
 }
 
 .nav__ul a {
-    color: #999;
+    color: #ffffff97;
 }
 
 .nav__ul--extra {
@@ -564,7 +569,7 @@ a {
 .legal {
     display: flex;
     flex-wrap: wrap;
-    color: #999;
+    color: #ffffff97;
 }
 
 .legal__links {
@@ -576,6 +581,10 @@ a {
     color: #2f2f2f;
 }
 
+.clr-white {
+    color: #fff;
+}
+
 @media screen and (min-width: 24.375em) {
     .legal .legal__links {
         margin-left: auto;
@@ -583,7 +592,7 @@ a {
 }
 
 @media screen and (min-width: 40.375em) {
-    .footer__nav>* {
+    .footer__nav > * {
         flex: 1;
     }
 
@@ -609,16 +618,15 @@ div .row {
 }
 
 .pacifico {
-    font-family: 'Pacifico', cursive;
+    font-family: "Pacifico", cursive;
     font-weight: 400;
     text-transform: lowercase;
 }
 
 .unbounded {
-    font-family: 'Unbounded', cursive;
+    font-family: "Unbounded", cursive;
     text-transform: uppercase;
 }
-
 
 /* Hero */
 
@@ -637,9 +645,7 @@ div .row {
     text-align: center;
     text-transform: uppercase;
     z-index: 1;
-    background: linear-gradient(to right,
-            #ffffff,
-            #00000000);
+    background: linear-gradient(to right, #ffffff, #00000000);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -655,7 +661,6 @@ div .row {
 .home-hero {
     position: absolute;
     background: #000;
-
 }
 
 .home-hero img {
@@ -677,7 +682,6 @@ div .row {
 .about-description h1,
 .about-description p {
     color: #000;
-
 }
 
 .about-description p {
@@ -696,7 +700,7 @@ div .row {
     width: 100%;
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
     body.active {
         overflow: hidden;
     }
@@ -753,7 +757,7 @@ div .row {
     color: #fff;
     font-weight: bold;
     cursor: pointer;
-    transition: transform .2s ease-out;
+    transition: transform 0.2s ease-out;
 }
 
 .file-name {
@@ -764,13 +768,13 @@ div .row {
     color: #c8c8c8;
 }
 
-input:hover+label,
-input:focus+label {
+input:hover + label,
+input:focus + label {
     transform: scale(1.02);
 }
 
 /* Adding an outline to the label on focus */
-input:focus+label {
+input:focus + label {
     outline: 1px solid #000;
     outline: -webkit-focus-ring-color auto 2px;
 }

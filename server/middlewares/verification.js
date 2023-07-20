@@ -12,25 +12,60 @@ const {
 // models
 const User = require("../models/User");
 
+module.exports.checkSessionToken = async (req, res, next) => {
+    try {
+        const token = req.session.token;
+        req.session.loggedIn = token ? true : false;
+
+        if (token) {
+            const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, {
+                expiresIn: "7d",
+            });
+            req.session.isAdmin = verifiedUser.role === "admin";
+            console.log(verifiedUser);
+        }
+
+        next();
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.error(error);
+    }
+};
+
+module.exports.adminVerify = async (req, res, next) => {
+    try {
+        const token = req.session.token;
+        req.session.loggedIn = token ? true : false;
+
+        const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, {
+            expiresIn: "7d",
+        });
+        req.session.isAdmin = verifiedUser.role === "admin";
+
+        next();
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.error(error);
+    }
+};
+
 // middleware token check function
 module.exports.loggedInVerify = async (req, res, next) => {
     try {
-        const token = req.header("auth-token");
-        if (!token) throw { error: { status: 401, message: "Access Denied!" } };
+        // const token = req.header("auth-token");
+        const token = req.session.token;
+        if (!token) throw { status: 401, message: "Access Denied!" };
 
-        const verifiedUser = jwt.verify(token, process.env.TOKEN_SECRET, { expiresIn: "7d" });
-
-        // req.user = verifiedUser;
-
+        const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, {
+            expiresIn: "7d",
+        });
         const userFound = await User.findById(verifiedUser._id);
         if (!userFound) throw nonExistenceError("login user account");
 
         req.user = userFound.toJSON();
 
         next();
-    } catch (err) {
-        if (process.env.NODE_ENV === "dev") console.error(err);
-        return res.status(400).send(err);
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.error(error);
+        return res.status(400).render("error", { error });
     }
 };
 
@@ -64,8 +99,8 @@ module.exports.paramAccountOwnerVerify = async (req, res, next) => {
         // req.user = paramUserFound.toJSON();
 
         next();
-    } catch (err) {
-        if (process.env.NODE_ENV === "dev") console.error(err);
-        res.status(400).send(err);
+    } catch (error) {
+        if (process.env.NODE_ENV === "dev") console.error(error);
+        res.status(400).send(error);
     }
 };

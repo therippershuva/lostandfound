@@ -7,7 +7,7 @@ const { transporter, verifyConnection } = require("../config/nodemailer");
  * @param {object} user User mongodb document
  * @param {*} token Token mongodb document
  *
- * @returns  {object} err
+ * @returns  {object} error
  */
 module.exports.confirmEmailSender = async (req, user, token) => {
     await verifyConnection();
@@ -115,10 +115,12 @@ module.exports.confirmEmailSender = async (req, user, token) => {
     // Send Message
     try {
         const success = await transporter.sendMail(message);
-        console.log("The verification email has been sent\nSuccess : " + success);
-    } catch (err) {
-        console.log("An error occured", err);
-        return err;
+        console.log(
+            "The verification email has been sent\nSuccess : " + success
+        );
+    } catch (error) {
+        console.log("An error occured", error);
+        return error;
     }
 };
 
@@ -128,7 +130,7 @@ module.exports.confirmEmailSender = async (req, user, token) => {
  * @param {object} user User mongodb document
  * @param {*} token Token mongodb document
  *
- * @returns  {object} err
+ * @returns  {object} error
  */
 module.exports.emailVerifiedEmailSender = async (user) => {
     await verifyConnection();
@@ -227,10 +229,12 @@ module.exports.emailVerifiedEmailSender = async (user) => {
     // Send Message
     try {
         const success = await transporter.sendMail(message);
-        console.log("The verification email has been sent\nSuccess : " + success);
-    } catch (err) {
+        console.log(
+            "The verification email has been sent\nSuccess : " + success
+        );
+    } catch (error) {
         console.log("An error occured");
-        return err;
+        return error;
     }
 };
 
@@ -243,7 +247,7 @@ module.exports.emailVerifiedEmailSender = async (user) => {
  * @param {object} user User mongodb document
  * @param {*} token Token mongodb document
  *
- * @returns  {object} err
+ * @returns  {object} error
  */
 module.exports.resetPasswordEmailSender = async (req, user, token) => {
     await verifyConnection();
@@ -360,9 +364,9 @@ module.exports.resetPasswordEmailSender = async (req, user, token) => {
     try {
         await transporter.sendMail(message);
         console.log("The password reset email has been sent");
-    } catch (err) {
+    } catch (error) {
         console.log("An error occured");
-        return err;
+        return error;
     }
     // return (success = { type: "Sucess", message: "The verification email has been sent" });
 };
@@ -376,7 +380,7 @@ module.exports.resetPasswordEmailSender = async (req, user, token) => {
  * @param {object} user User mongodb document
  * @param {*} token Token mongodb document
  *
- * @returns  {object} err
+ * @returns  {object} error
  */
 module.exports.deleteAccountEmailSender = async (req, user, token) => {
     await verifyConnection();
@@ -493,9 +497,9 @@ module.exports.deleteAccountEmailSender = async (req, user, token) => {
     try {
         await transporter.sendMail(message);
         console.log("The account deletion email has been sent");
-    } catch (err) {
+    } catch (error) {
         console.log("An error occured");
-        return err;
+        return error;
     }
     // return (success = { type: "Sucess", message: "The verification email has been sent" });
 };

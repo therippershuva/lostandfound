@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const customerController = require("../controllers/customerController");
+const { checkSessionToken } = require("../middlewares/verification");
 
 /**
  *  Customer Routes
