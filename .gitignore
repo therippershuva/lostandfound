@@ -1,3 +1,5 @@
+publice/upload/**/*
+
 # Logs
 logs
 *.log
