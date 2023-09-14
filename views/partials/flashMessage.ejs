@@ -1,4 +1,5 @@
-<% if(authMessages && authMessages.length > 0) { %>
+<% const authMessages = getFlashMessages("auth"); %> <% if(authMessages !==
+undefined && authMessages.length > 0) { %>
 <section class="">
     <% authMessages.forEach(element => { %>
     <div

@@ -19,27 +19,32 @@
                     <form id="signin" action="/auth/login" method="post">
                         <div class="sign-in-htm">
                             <div class="group">
-                                <label for="email" class="label">Email</label>
+                                <label for="login-email" class="label"
+                                    >Email</label
+                                >
                                 <input
-                                    id="email"
+                                    id="login-email"
                                     type="email"
                                     name="email"
                                     class="input"
                                 />
                             </div>
                             <div class="group">
-                                <label for="word" class="label">Password</label>
+                                <label for="login-password" class="label"
+                                    >Password</label
+                                >
                                 <input
-                                    id="password"
+                                    id="login-password"
+                                    name="password"
                                     type="password"
                                     class="input"
                                     data-type="password"
-                                    name="password"
                                 />
                             </div>
 
                             <div class="group">
                                 <input
+                                    id="login-submit"
                                     type="submit"
                                     class="button mt-5"
                                     value="Sign In"
@@ -60,7 +65,7 @@
                                     >Email Address</label
                                 >
                                 <input
-                                    id="email"
+                                    id="signup-email"
                                     name="email"
                                     type="email"
                                     class="input"
@@ -68,11 +73,11 @@
                                 />
                             </div>
                             <div class="group">
-                                <label for="username" class="label"
+                                <label for="signup-username" class="label"
                                     >Username</label
                                 >
                                 <input
-                                    id="username"
+                                    id="signup-username"
                                     name="username"
                                     type="text"
                                     class="input"
@@ -80,11 +85,11 @@
                                 />
                             </div>
                             <div class="group">
-                                <label for="password" class="label"
+                                <label for="signup-password" class="label"
                                     >Password</label
                                 >
                                 <input
-                                    id="password"
+                                    id="signup-password"
                                     name="password"
                                     type="password"
                                     class="input"
@@ -95,6 +100,7 @@
 
                             <div class="group">
                                 <input
+                                    id="signup-submit"
                                     type="submit"
                                     class="button mt-5"
                                     value="Sign Up"
@@ -114,3 +120,28 @@
         </div>
     </div>
 </div>
+
+<!-- <script>
+    const loginForm = document.getElementById("signin");
+    loginForm.addEventListener("submit", handleLogin);
+
+    function handleLogin(e) {
+        e.preventDefault();
+
+        const email = loginForm.querySelector("#login-email").value;
+        const password = loginForm.querySelector("#login-password").value;
+
+        fetch("auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                localStorage.setItem("token", data.data.token);
+            })
+            .catch((err) => console.log(err));
+    }
+</script> -->

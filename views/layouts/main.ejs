@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -16,7 +16,24 @@
     <body class="outfit">
         <%- include('../partials/header.ejs') %>
 
-        <main class="justify-content-center min-vh-80"><%- body %></main>
+        <main class="justify-content-center min-vh-80">
+            <% if (getFlashMessages("info").length > 0 &
+            getFlashMessages("error").length > 0) {%>
+            <section id="notifications">
+                <div class="container py-2">
+                    <div class="row">
+                        <%- include('../partials/flashMessage.ejs') %>
+                    </div>
+                </div>
+
+                <div class="container py-2">
+                    <div class="row">
+                        <%- include('../partials/flashErrorMessage.ejs') %>
+                    </div>
+                </div>
+            </section>
+            <% } %> <%- body %>
+        </main>
 
         <%- include('../partials/footer.ejs') %>
     </body>
