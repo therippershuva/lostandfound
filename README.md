@@ -9,7 +9,7 @@
 Create a .env file to store your credentials. Example below:
 
 ```dotenv
-MONGODB_URI = mongodb+srv://<username>:<password>@mongodburlhere
+MONGO_URI = mongodb+srv://<username>:<password>@mongodburlhere
 ```
 
 ## Installation
@@ -18,5 +18,5 @@ To install and run this project - install dependencies using npm and then start 
 
 ```dotenv
 npm install
-npm start
+npm dev
 ```
