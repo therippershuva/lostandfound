@@ -1,6 +1,8 @@
-# Nodejs User Management Express EJS MongoDB
+# Lost and Found Management Express EJS MongoDB and NodeJS
 
-## You need
+Lost and F`ound Management System is a web application that allows users to post items that they have lost or found. The application is built using Express, EJS, MongoDB and NodeJS.
+
+## Usage
 
 - Database (MongoDB) Free
 
