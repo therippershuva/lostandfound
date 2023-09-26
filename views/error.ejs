@@ -1,10 +1,18 @@
 <div class="row justify-content-center align-content-center min-vh-80">
     <div class="col-4">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">An error occoured!</h3>
+        <div class="card p-5">
+            <img
+                class="card-img-top"
+                src="/public/svgs/error.svg"
+                alt="Title"
+                style="object-fit: fill; max-height: 200px"
+            />
+            <div class="card-body text-center mt-3">
+                <h3 class="h2 text-danger">
+                    <%= error.type?error.type:"An error occoured!" %>
+                </h3>
                 <% if (error.message) { %>
-                <p class="card-text"><%= error.message %></p>
+                <p class="h4 text-danger"><%= error.message %></p>
                 <% } %>
             </div>
         </div>

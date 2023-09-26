@@ -1,69 +1,90 @@
 <nav
     class="navbar navbar-expand py-3"
-    style="background: rgba(40, 57, 101, 0.9)"
+    style="
+        background: rgba(40, 57, 101);
+        position: sticky;
+        z-index: 1000;
+        width: 100%;
+        top: 0;
+    "
 >
     <div class="mx-5 px-5 row justify-content-between w-100">
         <div class="col">
-            <ul class="navbar-nav align-items-center">
+            <ul class="navbar-nav align-items-center gap-2">
+                <% if (req.session.user && req.session.user.role === "admin") {
+                %>
                 <li class="nav-item">
-                    <a
-                        class="navbar-brand unbounded text-white bg-transparent shadow-none"
-                        href="/"
-                        >LOST & FOUND</a
-                    >
-                </li>
-                <li class="nav-item">
-                    <a
-                        class="nav-link text-white"
-                        aria-current="page"
-                        href="/item/found"
-                        >Found
+                    <a href="/admin" class="btn btn-outline-light">
+                        Admin Panel
                     </a>
                 </li>
+                <% } %> <% if (req.session.user !== null & req.session.user !==
+                undefined ) { %>
+                <li class="nav-item">
+                    <a href="/me/dashboard" class="btn btn-outline-light">
+                        Dashboard
+                    </a>
+                </li>
+                <% } %>
+                <!--
+                    <% if (req.session.user && req.session.user.role ===
+                    "admin") { %>
                 <li class="nav-item">
                     <a
+                    class="nav-link text-white"
+                    aria-current="page"
+                    href="/item/found"
+                        >Found
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
                         class="nav-link text-white"
                         aria-current="page"
                         href="/item/lost"
                         >Lost
                     </a>
                 </li>
+                <% } %>
+                -->
+
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/about">About</a>
                 </li>
             </ul>
         </div>
 
-        <div class="col-2">
-            <form class="" role="search">
-                <input
+        <div class="col-2 my-auto">
+            <a
+                class="navbar-brand unbounded text-white bg-transparent shadow-none"
+                href="/"
+                >LOST & FOUND
+            </a>
+            <!--
+                <form class="" role="search">
+                    <input
                     class="form-control text-light form-control-sm p-2"
                     type="search"
                     placeholder="Search"
                     aria-label="Search"
                     style="background-color: rgba(255, 255, 255, 0.08)"
-                />
-            </form>
+                    />
+                </form>
+            -->
         </div>
 
         <div class="col d-flex flex-row gap-2 justify-content-end">
             <% if (req.session.user !== null & req.session.user !== undefined )
             { %>
-            <a href="/lost-and-found" class="nav-link">
-                <button class="btn btn-outline-light" type="submit">
+            <a href="/item/lost-and-found" class="nav-link">
+                <button class="btn btn-outline-warning" type="submit">
                     Report Lost/Found
                 </button>
             </a>
             <a href="/auth/logout" class="nav-link">
                 <button class="btn btn-primary" type="submit">Sign Out</button>
             </a>
-            <% if (req.session.user && req.session.user.role === "admin") { %>
-            <a href="/admin" class="nav-link">
-                <button class="btn btn-warning" type="submit">
-                    Admin panel
-                </button>
-            </a>
-            <% } %> <% } else { %>
+            <% } else { %>
             <a href="/sign-up-in" class="nav-link">
                 <button class="btn btn-primary" type="submit">Sign In</button>
             </a>

@@ -15,8 +15,7 @@
     </head>
     <body class="outfit">
         <%- include('../partials/header.ejs') %>
-
-        <main class="justify-content-center min-vh-80">
+        <main class="justify-content-center min-vh-80 <%= req.url === '/' ? "" : "container" %>" >
             <% if (getFlashMessages("info").length > 0 &
             getFlashMessages("error").length > 0) {%>
             <section id="notifications">
@@ -37,4 +36,8 @@
 
         <%- include('../partials/footer.ejs') %>
     </body>
+    <script
+        type="text/javascript"
+        src="../../node_modules//mdb-ui-kit/js/mdb.min.js"
+    ></script>
 </html>

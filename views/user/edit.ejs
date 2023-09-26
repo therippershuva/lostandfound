@@ -1,7 +1,7 @@
-<div
-    class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
->
-    <h1 class="h2">Editing: <%= customer.firstName %> <%= customer.lastName %></h1>
+<div class="border-bottom mt-3 mb-4">
+    <h1 class="h2">
+        Editing: <%= customer.firstName %> <%= customer.lastName %>
+    </h1>
     <div class="btn-toolbar mb-2 mb-md 0">
         <div class="btn-group me-2">
             <button class="btn btn-sm btn-outline-secondary">?</button>
@@ -22,7 +22,10 @@
             </nav>
         </div>
         <div class="col text-end fw-lighter">
-            <b>Last Updated: <%= new Date(customer.updatedAt).toUTCString() %></b>
+            <b
+                >Last Updated: <%= new Date(customer.updatedAt).toUTCString()
+                %></b
+            >
             <b>UserId:</b> <%= customer._id %>
         </div>
     </div>
@@ -118,7 +121,9 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">You are about to remove a customer record.</div>
+                <div class="modal-title">
+                    You are about to remove a customer record.
+                </div>
                 <button
                     type="button"
                     class="btn-close"
@@ -129,12 +134,18 @@
             <div class="modal-body">
                 <p>
                     This will remove the customer record of
-                    <b class="fw-bold"><%= customer.firstName %> <%= customer.lastName %></b><br />
+                    <b class="fw-bold"
+                        ><%= customer.firstName %> <%= customer.lastName %></b
+                    ><br />
                     Are you sure?
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
                     Close
                 </button>
                 <form
@@ -142,7 +153,9 @@
                     method="POST"
                     class="position-relative"
                 >
-                    <button type="submit" class="btn btn-primary">Yes, Remove Customer</button>
+                    <button type="submit" class="btn btn-primary">
+                        Yes, Remove Customer
+                    </button>
                 </form>
             </div>
         </div>

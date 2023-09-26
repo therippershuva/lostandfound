@@ -1,5 +1,5 @@
-<% const errorMessages = getFlashMessages("error") %> <% if(errorMessages !==
-undefined && errorMessages.length > 0) { %>
+<% var errorMessages; %><% errorMessages = getFlashMessages("error"); %> <%
+if(errorMessages !== undefined && errorMessages.length > 0) { %>
 <section class="">
     <% errorMessages.forEach(element => { %>
     <div
