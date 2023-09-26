@@ -3,6 +3,22 @@
     height: 16px;
 }
 
+.hover-translucent {
+    transition: all 0.2s ease-in-out;
+}
+
+.hover-translucent:hover {
+    opacity: 0.75;
+}
+
+.hover-scale {
+    transition: all 0.2s ease-in-out;
+}
+
+.hover-scale:hover {
+    scale: 1.1;
+}
+
 /*
  * Sidebar
  */
