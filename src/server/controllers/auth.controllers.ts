@@ -13,8 +13,8 @@ import {
     registerValidation,
     resendConfEmailValidation,
 } from "../middlewares/validation";
-import { Token } from "../models/Token";
-import { User } from "../models/User";
+import { Token } from "../models/Token.models";
+import { User } from "../models/User.models";
 import { errorMessage, nonExistenceError } from "../utils/errorMessages";
 
 import type { Request, Response } from "express";
@@ -56,29 +56,30 @@ export const register_post = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         // User creation in database (create a new user using the credentials provided and hashed and our schema)
-        const user = new User({
+        const savedUser = await User.create({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
         });
 
-        // save the user in the databse
-        const savedUser = await user.save();
-
         // token generator
         const tokenKey =
             Math.random().toString(36).substring(2, 10) +
             Math.random().toString(36).substring(2, 10);
-        const token = new Token({
+
+        const savedToken = await Token.create({
             userId: savedUser.id,
             token: tokenKey,
             usage: "Email confirmation",
         });
-        const savedToken = await token.save();
         // console.log("\nsavedToken:" + savedToken);
 
         // send email
-        const messageResponse = await confirmEmailSender(req, user, savedToken);
+        const messageResponse = await confirmEmailSender(
+            req,
+            savedUser,
+            savedToken,
+        );
         if (messageResponse) throw messageResponse;
 
         res.flash(
@@ -121,7 +122,7 @@ export const login_post = async (req: Request, res: Response) => {
         if (!userFound.isEmailVerified)
             throw {
                 type: "Access denied",
-                message: "Email is not verified!",
+                message: "Email is not verified! Please verify.",
                 location: "email",
             };
 
@@ -142,11 +143,11 @@ export const login_post = async (req: Request, res: Response) => {
         res.locals.loggedIn = true;
         res.flash("auth", "Successfully logged in!");
 
-        return res.redirect("/item/lost");
+        return res.redirect("/me/dashboard");
     } catch (error: Error | any) {
         console.error(error);
-        res.flash("auth", error.message);
-        return res.redirect("auth/sign-up-in");
+        res.flash("error", error.message);
+        return res.render("error", { error, req, res });
     }
 };
 
@@ -163,7 +164,7 @@ export const logout_get = async (req: Request, res: Response) => {
             });
         });
 
-        return res.redirect("/item/lost");
+        return res.redirect("/");
     } catch (error: Error | any) {
         console.error(error);
         res.flash("error", error.message);
@@ -183,7 +184,7 @@ export const email_confirmation_handler_get = async (
         const tokenFound = await Token.findOne({ token: urlToken });
         if (!tokenFound)
             throw {
-                type: "Non-existence",
+                type: "Token Expired",
                 message:
                     "Unable to find a valid token or Token already expired",
             };
@@ -201,7 +202,7 @@ export const email_confirmation_handler_get = async (
         // check user associated with token for if it is already verified
         if (userToVerifyEmail.isEmailVerified)
             throw {
-                type: "already verified",
+                type: "Already Verified",
                 message: "The associated user has already been verified",
             };
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import * as authController from "../controllers/authControllers";
+import * as authController from "../controllers/auth.controllers";
 import { loggedInVerify } from "../middlewares/verification";
 
 const authRouter = Router();

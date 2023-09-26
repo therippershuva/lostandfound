@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema<TUser>(
             type: Date,
             default: null,
         },
-        bio: {
+        details: {
             type: String,
             maxLength: 1000,
             default: null,
@@ -58,6 +58,11 @@ const userSchema = new mongoose.Schema<TUser>(
             type: String,
             default: null,
         },
+        tel: {
+            type: String,
+            default: null,
+        },
+
         // ROLES
 
         role: {
@@ -80,10 +85,11 @@ export type TUser = mongoose.Document & {
     middleName?: string;
     lastName?: string;
     dateOfBirth?: Date;
-    bio?: string;
+    details?: string;
     avatarImage?: string;
     coverImage?: string;
     role: string;
+    tel: string;
 };
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("Users", userSchema);

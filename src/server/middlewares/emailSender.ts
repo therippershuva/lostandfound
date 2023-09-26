@@ -2,8 +2,8 @@ import { env } from "../../env";
 import { transporter, verifyConnection } from "../config/nodemailer";
 
 import type { Request } from "express";
-import type { TToken } from "../models/Token";
-import type { TUser } from "../models/User";
+import type { TToken } from "../models/Token.models";
+import type { TUser } from "../models/User.models";
 
 /**
  * ### Email confirmation email sender
@@ -217,7 +217,7 @@ export const emailVerifiedEmailSender = async (user: TUser) => {
                     />
                     <div class="container">
                         <div class="custom">
-                            <h1 class="custom">Confirm your e-mail address</h1>
+                            <h1 class="custom">Account Verified</h1>
                             <p class="custom">
                             Dear <strong>${user.username}</strong>,<br />
                             Your'${user.email}'</strong> has been verified. Thank you for using our services. Please have a great time. 

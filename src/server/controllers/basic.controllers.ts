@@ -1,12 +1,9 @@
 import { CustomLocals } from "@/types/reqResNext";
-import { Customer } from "../models/Customer";
+
+import { FoundItem, LostItem } from "../models/Item.models";
+import { User } from "../models/User.models";
 
 import type { Request, Response } from "express";
-
-/**
- * GET /
- * Homepage
- */
 export const admin = async (req: Request, res: Response) => {
     res.locals = {
         ...res.locals,
@@ -18,18 +15,21 @@ export const admin = async (req: Request, res: Response) => {
     let page = Number(req.query.page) || 1;
 
     try {
-        const customers = await Customer.aggregate([
-            { $sort: { createdAt: -1 } },
-        ])
+        const users = await User.aggregate([{ $sort: { createdAt: -1 } }])
             .skip(perPage * page - perPage)
             .limit(perPage)
             .exec();
-        const count = await Customer.count();
+        const usersCount = users.length;
+        const lostItemsCount = await LostItem.count();
+        const foundItemsCount = await FoundItem.count();
 
         return res.render("admin", {
-            customers,
+            users,
+            usersCount,
+            lostItemsCount,
+            foundItemsCount,
             current: page,
-            pages: Math.ceil(count / perPage),
+            pages: Math.ceil(usersCount / perPage),
             req,
             res,
         });
@@ -40,10 +40,26 @@ export const admin = async (req: Request, res: Response) => {
     }
 };
 
-/**
- * GET /
- * About
- */
+export const home = async (req: Request, res: Response) => {
+    res.locals = {
+        ...res.locals,
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+    };
+
+    try {
+        if (req.session.user) {
+            return res.redirect("/me/dashboard");
+        } else {
+            return res.render("landing", { req, res });
+        }
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error });
+    }
+};
+
 export const about = async (req: Request, res: Response) => {
     res.locals = {
         ...res.locals,
@@ -69,43 +85,6 @@ export const signUpIn = async (req: Request, res: Response) => {
         };
 
         return res.render("signUpIn", { req, res });
-    } catch (error: Error | any) {
-        console.log(error);
-        res.flash("error", error.message);
-        return res.status(500).render("error", { error });
-    }
-};
-
-export const home = async (req: Request, res: Response) => {
-    res.locals = {
-        ...res.locals,
-        title: "Lost and Found",
-        description: "Lost and Found Management System",
-    };
-
-    try {
-        if (req.session.user) {
-            return res.redirect("/item/lost");
-        } else {
-            return res.render("landing", { req, res });
-        }
-    } catch (error: Error | any) {
-        console.log(error);
-        res.flash("error", error.message);
-        return res.status(500).render("error", { error });
-    }
-};
-
-export const lostAndFound = async (req: Request, res: Response) => {
-    res.locals = {
-        ...res.locals,
-        title: "Lost and Found",
-        description: "Lost and Found Management System",
-        session: req.session,
-    };
-
-    try {
-        return res.render("lostAndFound", { req, res });
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);

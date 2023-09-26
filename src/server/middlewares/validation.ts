@@ -69,7 +69,7 @@ export const updateUserValidation = (data: TRequestBody) => {
         firstName: Joi.string().max(100),
         middleName: Joi.string().max(100),
         lastName: Joi.string().max(100),
-        bio: Joi.string().max(1000),
+        details: Joi.string().max(1000),
         password: Joi.string().min(8).required(),
         dateOfBirth: Joi.date(),
     });

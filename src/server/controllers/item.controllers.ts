@@ -1,20 +1,21 @@
-import { FoundItem, LostItem } from "../models/Item";
+import { FoundItem, LostItem } from "../models/Item.models";
 
 import type { Request, Response } from "express";
 
+/////////////////////////////////
+// CREATE
+/////////////////////////////////
+
 export const postLostItem = async (req: Request, res: Response) => {
     try {
-        const filesArray = req.files as Express.Multer.File[];
+        const reqUser = req.session?.user;
+        if (!reqUser) throw new Error("Please Login to continue.");
+
         const filesDictionary = req.files as {
             [fieldname: string]: Express.Multer.File[];
         };
 
         let images: string[] = [];
-        if (filesArray) {
-            for (let item of filesArray) {
-                images.push(item.path);
-            }
-        }
 
         if (filesDictionary) {
             for (let item in filesDictionary) {
@@ -26,39 +27,35 @@ export const postLostItem = async (req: Request, res: Response) => {
         }
 
         const newItem = new LostItem({
+            createdBy: reqUser._id,
             description: req.body.description,
-            lastLocation: req.body.lastLocation,
+            lostLocation: req.body.lostLocation,
             images: images,
             name: req.body.name,
             category: req.body.category,
-            lastSeenDate: req.body.lastSeenDate,
+            lostDate: req.body.lostDate,
         });
 
         await LostItem.create(newItem);
         res.flash("info", "New item has been added.");
 
-        return res.redirect("/item/lost");
+        return res.redirect("/me/dashboard");
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);
-        return res.status(500).render("error", { error });
+        return res.status(500).render("error", { error, req, res });
     }
 };
 
 export const postFoundItem = async (req: Request, res: Response) => {
-    const filesArray = req.files as Express.Multer.File[];
+    const reqUser = req.session?.user;
+    if (!reqUser) throw new Error("Please Login to continue.");
+
     const filesDictionary = req.files as {
         [fieldname: string]: Express.Multer.File[];
     };
 
     let images: string[] = [];
-
-    if (filesArray) {
-        for (let item of filesArray) {
-            images.push(item.path);
-        }
-    }
-
     if (filesDictionary) {
         for (let item in filesDictionary) {
             let files = filesDictionary[item];
@@ -69,6 +66,7 @@ export const postFoundItem = async (req: Request, res: Response) => {
     }
 
     const newItem = new FoundItem({
+        createdBy: reqUser._id,
         description: req.body.description,
         foundLocation: req.body.foundLocation,
         images: images,
@@ -81,13 +79,30 @@ export const postFoundItem = async (req: Request, res: Response) => {
         await FoundItem.create(newItem);
         await res.flash("info", "New item has been added.");
 
-        res.redirect("/item/lost");
+        res.redirect("/me/dashboard");
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);
-        return res.status(500).render("error", { error });
+        return res.status(500).render("error", { error, req, res });
     }
 };
+
+export const postMatchLostAndFound = async (req: Request, res: Response) => {
+    try {
+        const reqUser = req.session?.user;
+        if (!reqUser) throw new Error("Please Login to continue.");
+
+        return res.redirect("/me/dashboard");
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error, req, res });
+    }
+};
+
+/////////////////////////////////
+// READ
+/////////////////////////////////
 
 export const lostItems = async (req: Request, res: Response) => {
     const locals = {
@@ -96,22 +111,23 @@ export const lostItems = async (req: Request, res: Response) => {
     };
 
     let perPage = 12;
-    let lostPage = Number(req.query.lostPage) || 1;
+    let lostCurrent = Number(req.query.lostPage) || 1;
 
     try {
         const lostItems = await LostItem.aggregate([
             { $sort: { createdAt: -1 } },
         ])
-            .skip(perPage * lostPage - perPage)
+            .skip(perPage * lostCurrent - perPage)
             .limit(perPage)
             .exec();
-        const lostCount = await LostItem.count();
+        const myCountLost = await LostItem.count();
 
-        return res.render("lostItems", {
+        return res.render("item/lostItems", {
             locals,
             lostItems,
-            lostCurrent: lostPage,
-            lostPages: Math.ceil(lostCount / perPage),
+            lostCurrent,
+            lostPages: Math.ceil(myCountLost / perPage),
+            // req info
             req,
             res,
         });
@@ -126,29 +142,64 @@ export const foundItems = async (req: Request, res: Response) => {
     const locals = {
         title: "Lost and Found",
         description: "Lost and Found Management System",
-        loggedIn: !!req.session.cookie,
     };
 
     let perPage = 12;
-    let foundPage = Number(req.query.foundPage) || 1;
+    let foundCurrent = Number(req.query.foundPage) || 1;
 
     try {
         const foundItems = await FoundItem.aggregate([
             { $sort: { createdAt: -1 } },
         ])
-            .skip(perPage * foundPage - perPage)
+            .skip(perPage * foundCurrent - perPage)
             .limit(perPage)
             .exec();
-        const foundCount = await FoundItem.count();
+        const myCountFound = await FoundItem.count();
 
-        return res.render("foundItems", {
+        return res.render("item/foundItems", {
             locals,
             foundItems,
-            foundCurrent: foundPage,
-            foundPages: Math.ceil(foundCount / perPage),
+            foundCurrent,
+            foundPages: Math.ceil(myCountFound / perPage),
+            // req info
             req,
             res,
         });
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error });
+    }
+};
+
+export const matchItemsPage = async (req: Request, res: Response) => {
+    try {
+        const lostItems = await LostItem.find();
+        const foundItems = await FoundItem.find();
+
+        return res.render("item/matchLostAndFound", {
+            lostItems,
+            foundItems,
+            req,
+            res,
+        });
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error });
+    }
+};
+
+export const reportLostAndFoundPage = async (req: Request, res: Response) => {
+    res.locals = {
+        ...res.locals,
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+        session: req.session,
+    };
+
+    try {
+        return res.render("item/reportLostOrFound", { req, res });
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);
