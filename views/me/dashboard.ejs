@@ -1,5 +1,5 @@
 <h2 class="h1 text-center py-3 border-bottom">Dashboard</h2>
-<div class="row justify-content-center gap-5" ">
+<div class="row justify-content-center gap-3">
     <section id="items" class="col-8 my-5">
         <div class="text-center">
             <h1 class="h2">My Items</h1>
@@ -12,13 +12,36 @@
         </div>
     </section>
 
-    <section
-        id="notifications"
-        class="col-3 card p-5 my-5"
-        style="position: sticky;"
-    >
-        <div class="text-center">
-            <h2 class="h2">Notifications</h2>
+    <section id="notifications" class="col-3">
+        <a href="/user/view/<%= req.session.user._id %>" class="nav-link">
+            <div class="card p-5 my-5 hover-scale">
+                <h2 class="h2 text-center mb-3">Profile</h2>
+
+                <div class="row justify-content-center my-2">
+                    <img
+                        src="<%= req.session.user.avatarImage ?? `/public/svgs/pfp.svg` %>"
+                        alt="pfp"
+                        style="height: 80px; width: 80px"
+                    />
+                </div>
+
+                <div class="row justify-content-start my-2">
+                    <div class="gap-3">
+                        <strong>Username</strong>: <%= req.session.user.username
+                        %>
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <span class="gap-3">
+                        <strong>Email</strong>: <%=req.session.user.email %>
+                    </span>
+                </div>
+            </div>
+        </a>
+
+        <div class="card p-5 my-5">
+            <h2 class="h2 text-center">Notifications</h2>
         </div>
     </section>
 </div>

@@ -1,0 +1,16 @@
+<div class="d-flex flex-column shadow-lg rounded-2 my-5 p-5 min-vh-80">
+    <h1 class="pb-3 border-bottom text-center">Match Items</h1>
+    <% if (matchedItems.length > 0) { %> <% matchedItems.forEach(element => { %>
+    <div class="d-flex flex-row border my-2 p-4 rounded-3">
+        <div class="d-flex flex-column align-items-center flex-fill">
+            <h2 class="h2">Lost Item</h2>
+            <%- include('./card/lostItem', { element: element.lostItem}) %>
+        </div>
+        <div class="vr" style="max-width: 2px"></div>
+        <div class="d-flex flex-column align-items-center flex-fill">
+            <h2 class="h2">Found Item</h2>
+            <%- include('./card/foundItem', { element: element.foundItem}) %>
+        </div>
+    </div>
+    <% }) %> <% } %>
+</div>

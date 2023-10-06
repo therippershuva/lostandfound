@@ -1,7 +1,5 @@
 <div class="border-bottom mt-3 mb-4">
-    <h1 class="h2">
-        Editing: <%= customer.firstName %> <%= customer.lastName %>
-    </h1>
+    <h1 class="h2">Editing: <%= user.firstName %> <%= user.lastName %></h1>
     <div class="btn-toolbar mb-2 mb-md 0">
         <div class="btn-group me-2">
             <button class="btn btn-sm btn-outline-secondary">?</button>
@@ -16,22 +14,19 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                     <li class="breadcrumb-item active">
-                        <%= customer.firstName %> <%= customer.lastName %>
+                        <%= user.firstName %> <%= user.lastName %>
                     </li>
                 </ol>
             </nav>
         </div>
         <div class="col text-end fw-lighter">
-            <b
-                >Last Updated: <%= new Date(customer.updatedAt).toUTCString()
-                %></b
-            >
-            <b>UserId:</b> <%= customer._id %>
+            <b>Last Updated: <%= new Date(user.updatedAt).toUTCString() %></b>
+            <b>UserId:</b> <%= user._id %>
         </div>
     </div>
 </div>
 
-<form action="/edit/<%= customer._id %>?_method=PUT" method="POST">
+<form action="/edit/<%= user._id %>?_method=PUT" method="POST">
     <div class="row form-group mb-4">
         <div class="col">
             <label for="firstName">First Name</label>
@@ -40,7 +35,7 @@
                 class="form-control"
                 id="firstName"
                 name="firstName"
-                value="<%= customer.firstName %>"
+                value="<%= user.firstName %>"
                 placeholder="First Name"
                 required
             />
@@ -53,7 +48,7 @@
                 class="form-control"
                 id="lastName"
                 name="lastName"
-                value="<%= customer.lastName %>"
+                value="<%= user.lastName %>"
                 placeholder="Last Name"
                 required
             />
@@ -68,7 +63,7 @@
                 class="form-control"
                 id="tel"
                 name="tel"
-                value="<%= customer.tel %>"
+                value="<%= user.tel %>"
                 placeholder="Telephone"
                 required
             />
@@ -81,7 +76,7 @@
                 class="form-control"
                 id="email"
                 name="email"
-                value="<%= customer.email %>"
+                value="<%= user.email %>"
                 placeholder="Email"
                 required
             />
@@ -98,7 +93,7 @@
             rows="12"
             placeholder="Customer Details"
         >
-<%= customer.details %></textarea
+<%= user.details %></textarea
         >
     </div>
 
@@ -122,7 +117,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
-                    You are about to remove a customer record.
+                    You are about to remove a user record.
                 </div>
                 <button
                     type="button"
@@ -133,9 +128,9 @@
             </div>
             <div class="modal-body">
                 <p>
-                    This will remove the customer record of
+                    This will remove the user record of
                     <b class="fw-bold"
-                        ><%= customer.firstName %> <%= customer.lastName %></b
+                        ><%= user.firstName %> <%= user.lastName %></b
                     ><br />
                     Are you sure?
                 </p>
@@ -149,7 +144,7 @@
                     Close
                 </button>
                 <form
-                    action="/edit/<%= customer._id %>?_method=DELETE"
+                    action="/edit/<%= user._id %>?_method=DELETE"
                     method="POST"
                     class="position-relative"
                 >

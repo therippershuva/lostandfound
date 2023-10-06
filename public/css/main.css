@@ -1,22 +1,69 @@
+th,
+td {
+    padding: 0 5px;
+}
+
+.popup-close-cross {
+    display: flex;
+    position: relative;
+    left: 95%;
+    top: -10px;
+    z-index: 1000;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: rgba(255, 0, 0, 0.854);
+    padding: 0.2em;
+    color: white;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
 .feather {
     width: 16px;
     height: 16px;
 }
 
-.hover-translucent {
+.dialog {
+    height: 80svh;
+    width: 70svw;
+    border-radius: 2em;
+    border: 0;
+    box-shadow: 0 0 0.5em 0.5em rgba(0, 0, 0, 0.25);
+    box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.16),
+        0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.hover-translucent,
+.hover-scale,
+.hover-shadow,
+.hover-bg-blue {
     transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.hover-scale:hover {
+    scale: 1.1;
+}
+
+.hover-bg-blue:hover {
+    background-color: #67b0ffc8;
 }
 
 .hover-translucent:hover {
     opacity: 0.75;
 }
 
-.hover-scale {
-    transition: all 0.2s ease-in-out;
-}
-
-.hover-scale:hover {
-    scale: 1.1;
+.hover-shadow:hover {
+    box-shadow: 0 0 0.5em 0.5em rgba(0, 0, 0, 0.25);
+    box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.16),
+        0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 /*

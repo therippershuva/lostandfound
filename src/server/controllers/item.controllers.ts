@@ -1,4 +1,4 @@
-import { FoundItem, LostItem } from "../models/Item.models";
+import { FoundItem, LostItem, MatchItem } from "../models/Item.models";
 
 import type { Request, Response } from "express";
 
@@ -92,7 +92,24 @@ export const postMatchLostAndFound = async (req: Request, res: Response) => {
         const reqUser = req.session?.user;
         if (!reqUser) throw new Error("Please Login to continue.");
 
-        return res.redirect("/me/dashboard");
+        const { lostItem, foundItem } = req.body;
+        if (!lostItem || !foundItem) {
+            throw {
+                type: "Bad Request",
+                message: "Bad request. lostItem and foundItem are required",
+            };
+        }
+
+        await MatchItem.create({
+            lostItem,
+            foundItem,
+            matchedBy: reqUser._id,
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Matched successfully",
+        });
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);
@@ -134,7 +151,45 @@ export const lostItems = async (req: Request, res: Response) => {
     } catch (error: Error | any) {
         console.log(error);
         res.flash("error", error.message);
-        return res.status(500).render("error", { error });
+        return res.status(500).render("error", { error, res, req });
+    }
+};
+
+export const lostItemDetail = async (req: Request, res: Response) => {
+    try {
+        const reqUser = req.session.user;
+        if (!reqUser) throw new Error("Please Login to continue.");
+
+        const lostItemId = req.params.id;
+        if (!lostItemId) {
+            throw {
+                type: "Bad Request",
+                message: "Bad request. id is required in params",
+            };
+        }
+
+        const lostItemFound = await LostItem.findById(lostItemId)
+            .populate({
+                path: "createdBy",
+            })
+            .exec();
+
+        if (!lostItemFound) {
+            throw {
+                type: "Not Found",
+                message: "Item not found",
+            };
+        }
+
+        return res.status(200).render("item/lostItemDetail", {
+            lostItemFound,
+            res,
+            req,
+        });
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error, res, req });
     }
 };
 
@@ -161,6 +216,89 @@ export const foundItems = async (req: Request, res: Response) => {
             foundItems,
             foundCurrent,
             foundPages: Math.ceil(myCountFound / perPage),
+            // req info
+            req,
+            res,
+        });
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error });
+    }
+};
+
+export const foundItemDetail = async (req: Request, res: Response) => {
+    try {
+        const reqUser = req.session.user;
+        if (!reqUser) throw new Error("Please Login to continue.");
+
+        const foundItemId = req.params.id;
+        if (!foundItemId) {
+            throw {
+                type: "Bad Request",
+                message: "Bad request. id is required in params",
+            };
+        }
+
+        const foundItemFound = await FoundItem.findById(foundItemId)
+            .populate({
+                path: "createdBy",
+            })
+            .exec();
+
+        if (!foundItemFound) {
+            throw {
+                type: "Not Found",
+                message: "Item not found",
+            };
+        }
+
+        return res.status(200).render("item/foundItemDetail", {
+            foundItemFound,
+            res,
+            req,
+        });
+    } catch (error: Error | any) {
+        console.log(error);
+        res.flash("error", error.message);
+        return res.status(500).render("error", { error, res, req });
+    }
+};
+
+export const matchedItems = async (req: Request, res: Response) => {
+    const locals = {
+        title: "Lost and Found",
+        description: "Lost and Found Management System",
+    };
+
+    let perPage = 12;
+    let matchedCurrent = Number(req.query.matchedPage) || 1;
+
+    try {
+        const matchedItems = await MatchItem.aggregate([
+            { $sort: { createdAt: -1 } },
+        ])
+            .skip(perPage * matchedCurrent - perPage)
+            .limit(perPage)
+            .exec();
+
+        await MatchItem.populate(matchedItems, {
+            path: "lostItem",
+        });
+        await MatchItem.populate(matchedItems, {
+            path: "foundItem",
+        });
+        await MatchItem.populate(matchedItems, {
+            path: "matchedBy",
+        });
+
+        const myCountMatch = await MatchItem.count();
+
+        return res.render("item/matchedItems", {
+            locals,
+            matchedItems,
+            matchedCurrent,
+            matchedPages: Math.ceil(myCountMatch / perPage),
             // req info
             req,
             res,

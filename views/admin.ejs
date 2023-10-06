@@ -9,7 +9,11 @@
                 <div class="my-1 gap-3">
                     <h2 class="h2 border-bottom">Statistics</h2>
                 </div>
-                <a class="nav-link col" aria-current="page" href="/item/lost">
+                <a
+                    class="nav-link col"
+                    aria-current="page"
+                    href="/item/lost/list"
+                >
                     <div class="card bg-danger-subtle hover-scale">
                         <div class="card-body text-center text-danger py-5">
                             <h3 class="card-title h3">Lost Items</h3>
@@ -17,7 +21,11 @@
                         </div>
                     </div>
                 </a>
-                <a class="nav-link col" aria-current="page" href="/item/found">
+                <a
+                    class="nav-link col"
+                    aria-current="page"
+                    href="/item/found/list"
+                >
                     <div class="card bg-success-subtle hover-scale">
                         <div class="card-body text-center text-success py-5">
                             <h3 class="card-title h3">Found Items</h3>
@@ -26,11 +34,18 @@
                     </div>
                 </a>
 
-                <div class="card bg-primary-subtle col hover-scale">
-                    <div class="card-body text-center text-primary py-5">
-                        <h3 class="card-title h3">Matched Items</h3>
+                <a
+                    class="nav-link col"
+                    aria-current="page"
+                    href="/item/match/list"
+                >
+                    <div class="card bg-primary-subtle col hover-scale">
+                        <div class="card-body text-center text-primary py-5">
+                            <h3 class="card-title h3">Matched Items</h3>
+                            <h1 class="h1"><%= matchedItemsCount ?? 0 %></h1>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="row mt-5 gap-4">
@@ -39,7 +54,10 @@
                 </div>
                 <div class="row gap-3">
                     <h3 class="h3">Items</h3>
-                    <a href="/item/match" class="btn btn-lg btn-primary col">
+                    <a
+                        href="/item/match/add"
+                        class="btn btn-lg btn-primary col"
+                    >
                         Match lost and found items
                     </a>
                     <a href="/item/search" class="btn btn-lg btn-primary col">
@@ -65,76 +83,12 @@
             <div class="mt-4">
                 <div class="card px-4 pt-4 pb-2">
                     <div class="mb-5">
-                        <% users.forEach(element => { %>
-                        <a
-                            href="/user/<%= element._id %>"
-                            class="nav-link my-2"
-                        >
-                            <div class="row justify-content-start gap-3">
-                                <div class="col-1">
-                                    <img
-                                        src="<%= element.avatar ?? `/public/svgs/pfp.svg` %>"
-                                        alt="pfp"
-                                        style="height: 30px; width: 30px"
-                                    />
-                                </div>
-                                <div class="col-9 my-auto">
-                                    <%= element.username %>
-                                </div>
-                            </div>
-                        </a>
-                        <% }) %>
+                        <% users.forEach(element => { %> <%-
+                        include('./partials/users/userList', { element: element
+                        }) %> <% }) %>
                     </div>
-                    <% if (users.length > 0) { %>
-                    <nav aria-label="Dashboard Pagination">
-                        <ul class="pagination justify-content-center">
-                            <% if (current == 1) { %>
-                            <li class="page-item disabled">
-                                <a href="#" class="page-link">First</a>
-                            </li>
-                            <% } else { %>
-                            <li class="page-item">
-                                <a href="/?foundPage=1" class="page-link"
-                                    >First</a
-                                >
-                            </li>
-                            <% } %> <% var i = (Number(current) > 5 ?
-                            Number(current) - 4 : 1) %> <% if(i !== 1) { %>
-                            <li class="page-item disabled">
-                                <a href="#" class="page-link">...</a>
-                            </li>
-                            <% } %> <% for(; i <= (Number(current) + 4) && i <=
-                            pages; i++ ) { %> <% if (i == current) { %>
-                            <li class="page-item disabled">
-                                <a href="#" class="page-link"><%= i %></a>
-                            </li>
-                            <% } else { %>
-                            <li class="page-item">
-                                <a href="/?foundPage=<%= i %>" class="page-link"
-                                    ><%= i %></a
-                                >
-                            </li>
-                            <% } %> <% if (i == Number(current) + 4 && i <
-                            pages) { %>
-                            <li class="page-item disabled">
-                                <a href="#" class="page-link">...</a>
-                            </li>
-                            <% } %> <% } %> <% if (current == pages) { %>
-                            <li class="page-item disabled">
-                                <a href="#" class="page-link">Last</a>
-                            </li>
-                            <% } else { %>
-                            <li class="page-item">
-                                <a
-                                    href="/?foundPage=<%= pages %>"
-                                    class="page-link"
-                                    >Last</a
-                                >
-                            </li>
-                            <% } %>
-                        </ul>
-                    </nav>
-                    <% } %>
+                    <%- include('./partials/pagination', { current: current,
+                    pages: pages, items: users, type: "user" }) %>
                 </div>
             </div>
         </div>

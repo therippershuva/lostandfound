@@ -1,0 +1,41 @@
+<section id="found-items" name="found-items">
+    <div class="border-bottom mt-3 mb-5">
+        <h1 class="h1 text-center">Item Detail</h1>
+    </div>
+    <div class="row justify-content-start gap-5">
+        <div class="col card p-5">
+            <h2 class="h2 pb-2 mb-4">Item Information</h2>
+            <p><strong>Name:</strong> <%= foundItemFound.name %></p>
+            <p>
+                <strong>Description:</strong> <%= foundItemFound.description %>
+            </p>
+            <p>
+                <strong>Found Date:</strong> <%=
+                foundItemFound.foundDate.toDateString() %>
+            </p>
+            <p>
+                <strong>Found Location:</strong> <%=
+                foundItemFound.foundLocation %>
+            </p>
+            <p><strong>Category:</strong> <%= foundItemFound.category %></p>
+        </div>
+        <div class="col card p-5 mb-5">
+            <h2 class="h2 pb-2 mb-4">Reporter Information</h2>
+            <p>
+                <strong>Username:</strong> <%= foundItemFound.createdBy.username
+                %>
+            </p>
+            <p><strong>Email:</strong> <%= foundItemFound.createdBy.email %></p>
+            <p><strong>Role:</strong> <%= foundItemFound.createdBy.role %></p>
+            <!-- Add more Reporter details here as needed -->
+        </div>
+
+        <div class="card p-5 mb-5">
+            <h2 class="h2 pb-2 mb-4">Images</h2>
+            <% foundItemFound.images && foundItemFound.images.forEach((image)=>
+            { %>
+            <img src="/<%= image %>" alt="Item Image" class="col-5" />
+            <% }); %>
+        </div>
+    </div>
+</section>

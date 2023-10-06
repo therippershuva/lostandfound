@@ -1,0 +1,15 @@
+<a
+    href="/user/view/<%= element._id %>"
+    class="nav-link my-2 card p-3 bg-dark-subtle"
+>
+    <div class="row justify-content-start gap-3">
+        <div class="col-1">
+            <img
+                src="<%= element.avatarImage ?? `/public/svgs/pfp.svg` %>"
+                alt="pfp"
+                style="height: 30px; width: 30px"
+            />
+        </div>
+        <div class="col-9 my-auto"><%= element.username %></div>
+    </div>
+</a>

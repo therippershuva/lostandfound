@@ -1,9 +1,10 @@
 import { CustomLocals } from "@/types/reqResNext";
 
-import { FoundItem, LostItem } from "../models/Item.models";
+import { FoundItem, LostItem, MatchItem } from "../models/Item.models";
 import { User } from "../models/User.models";
 
 import type { Request, Response } from "express";
+
 export const admin = async (req: Request, res: Response) => {
     res.locals = {
         ...res.locals,
@@ -22,12 +23,14 @@ export const admin = async (req: Request, res: Response) => {
         const usersCount = users.length;
         const lostItemsCount = await LostItem.count();
         const foundItemsCount = await FoundItem.count();
+        const matchedItemsCount = await MatchItem.count();
 
         return res.render("admin", {
             users,
             usersCount,
             lostItemsCount,
             foundItemsCount,
+            matchedItemsCount,
             current: page,
             pages: Math.ceil(usersCount / perPage),
             req,

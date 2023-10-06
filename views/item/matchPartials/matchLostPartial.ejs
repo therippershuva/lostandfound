@@ -1,0 +1,172 @@
+<div class="p-5 flex-fill">
+    <h2 class="h2 text-center mb-5">Lost Item</h2>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <output
+            id="showLostDialog"
+            title="Click to choose"
+            class="d-flex w-50 justify-content-center mb-3"
+        >
+            <div
+                class="card col-3 bg-dark-subtle flex-fill d-flex flex-column justify-content-end align-item-center p-3 hover-translucent hover-shadow"
+                style="min-height: 300px; min-width: 150px"
+            >
+                <div style="height: 100px; width: 100px; margin: auto">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 30"
+                        fill="none"
+                        x="50px"
+                        y="50px"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM11 7V11H7C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13H11V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V13H17C17.5523 13 18 12.5523 18 12C18 11.4477 17.5523 11 17 11H13V7C13 6.44772 12.5523 6 12 6C11.4477 6 11 6.44772 11 7Z"
+                            fill="rgba(100,100,100,0.501)"
+                        />
+                    </svg>
+                </div>
+                <h2 class="h2 text-center mb-5 text-black-50">
+                    Choose Lost Item
+                </h2>
+            </div>
+        </output>
+
+        <dialog id="lostDialog" class="m-auto dialog">
+            <div class="p-5 h-100 d-flex flex-column">
+                <h2 class="h2 text-center border-bottom mb-4 pb-2">
+                    Choose a Lost Item
+                </h2>
+                <div
+                    id="items"
+                    class="row justify-content-start flex-fill overflow-y-scroll"
+                >
+                    <% lostItems.forEach(element => { %>
+                    <div
+                        id="<%= element.id %>"
+                        class="col-4 my-2"
+                        onclick="lostDialogOptionClick(this)"
+                    >
+                        <div class="card hover-bg-blue">
+                            <% if (element && element.images &&
+                            element.images.length > 0) {%>
+                            <img
+                                class="card-img-top"
+                                src="/<%= element.images[0] %>"
+                                alt="Title"
+                                style="object-fit: cover; max-height: 200px"
+                            />
+                            <% }%>
+                            <div
+                                class="card-body d-flex flex-column align-items-start"
+                            >
+                                <h4 class="card-title"><%= element.name %></h4>
+                                <p style="overflow-x: hidden">
+                                    <%= element.name %>
+                                </p>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                height="1em"
+                                                viewBox="0 0 448 512"
+                                                class="mb-1 me-2"
+                                                width="1em"
+                                            >
+                                                <path
+                                                    d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+                                                />
+                                            </svg>
+                                        </td>
+                                        <td>
+                                            <strong class="bold"
+                                                >Lost Location:
+                                            </strong>
+                                        </td>
+                                        <td><%= element.lostLocation %></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                height="1em"
+                                                viewBox="0 0 448 512"
+                                                class="mb-1 me-2"
+                                                width="1em"
+                                            >
+                                                <path
+                                                    d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"
+                                                />
+                                            </svg>
+                                        </td>
+                                        <td>
+                                            <strong class="bold"
+                                                >Lost Date:
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <%=
+                                            element.lostDate.toLocaleString("en-US",
+                                            { day: "numeric", month: "short",
+                                            year:"numeric"}); %>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+                <div class="d-flex justify-content-end pt-3 mt-5 border-top">
+                    <button
+                        id="closeLostDialog"
+                        class="btn btn-danger btn-lg"
+                        style="width: 30%"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </dialog>
+    </div>
+</div>
+
+<script>
+    // state
+    let selectedLostItem = null;
+    // elements
+    const closeLostDialogButton = document.getElementById("closeLostDialog");
+    const lostDialog = document.getElementById("lostDialog");
+    const lostOutputBox = document.getElementById("showLostDialog");
+    const showLostDialogBox = lostOutputBox.innerHTML;
+
+    // events
+    // lostDialog.addEventListener("click", (event) => {
+    //     if (event.target === lostDialog) {
+    //         lostDialog.close();
+    //     }
+    // });
+
+    lostOutputBox.addEventListener("click", () => {
+        lostDialog.showModal();
+    });
+
+    closeLostDialogButton.addEventListener("click", () => {
+        lostDialog.close();
+    });
+
+    // helpers
+    function lostDialogOptionClick(event) {
+        selectedLostItem = event.id;
+        lostOutputBox.innerHTML = event.innerHTML;
+        lostDialog.close();
+    }
+
+    function clearSelectedLostItem(event) {
+        selectedLostItem = null;
+        lostOutputBox.innerHTML = showLostDialogBox;
+    }
+
+    // "Show the dialog" button opens the <dialog> modally
+</script>

@@ -1,15 +1,5 @@
 <div class="border-bottom mt-3 mb-4">
-    <h1 class="h2"><%= customer.firstName %> <%= customer.lastName %></h1>
-    <div class="btn-toolbar mb-2 mb-md 0">
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">
-                Share
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">
-                Export
-            </button>
-        </div>
-    </div>
+    <h1 class="h2">Profile</h1>
 </div>
 
 <div class="col py-3">
@@ -18,65 +8,74 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                    <li class="breadcrumb-item active">
-                        <%= customer.firstName %>
-                    </li>
+                    <li class="breadcrumb-item active"><%= user.email %></li>
                 </ol>
             </nav>
         </div>
         <div class="col text-end fw-lighter">
-            <b
-                >Last Updated <%= new Date(customer.updatedAt).toUTCString() %>
-            </b>
-            <b>UserId:</b> <%= customer._id %>
+            <strong class="fw-bold">Last Updated: </strong>
+            <%= new Date(user.updatedAt).toLocaleString("en-US") %> |
+            <strong class="fw-bold">UserId:</strong> <%= user._id %>
         </div>
     </div>
 </div>
 
-<ul class="list-group">
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px"><b>Name:</b></div>
-            <div class="col">
-                <%= customer.firstName %> <%= customer.lastName %>
+<div class="row justify-content-center my-2">
+    <img
+        src="<%= req.session.user.avatarImage ?? `/public/svgs/pfp.svg` %>"
+        alt="pfp"
+        style="height: 100px; width: 100px"
+    />
+</div>
+
+<div class="d-flex justify-content-center my-2">
+    <ul class="list-group col-5">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px"><b>Name:</b></div>
+                <div class="col">
+                    <%= user.firstName %> <%= user.lastName %>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px"><b>Tel:</b></div>
-            <div class="col"><%= customer.tel %></div>
-        </div>
-    </li>
-
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px"><b>Email:</b></div>
-            <div class="col"><%= customer.email %></div>
-        </div>
-    </li>
-
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px"><b>Details:</b></div>
-            <div class="col"><%= customer.details %></div>
-        </div>
-    </li>
-
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px"><b>Date Created:</b></div>
-            <div class="col"><%= customer.createdAt %></div>
-        </div>
-    </li>
-
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col" style="max-width: 140px">
-                <b>Date Modified:</b>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px"><b>Tel:</b></div>
+                <div class="col"><%= user.tel %></div>
             </div>
-            <div class="col"><%= customer.updatedAt %></div>
-        </div>
-    </li>
-</ul>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px"><b>Email:</b></div>
+                <div class="col"><%= user.email %></div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px"><b>Details:</b></div>
+                <div class="col"><%= user.details %></div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px">
+                    <b>Date Created:</b>
+                </div>
+                <div class="col"><%= user.createdAt %></div>
+            </div>
+        </li>
+
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col" style="max-width: 140px">
+                    <b>Date Modified:</b>
+                </div>
+                <div class="col"><%= user.updatedAt %></div>
+            </div>
+        </li>
+    </ul>
+</div>
